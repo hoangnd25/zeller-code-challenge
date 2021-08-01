@@ -5,6 +5,7 @@ interface Config extends Record<string, unknown> {
   amount?: number;
   perItem?: boolean;
   percentage?: number;
+  everyNthItem?: number;
 }
 
 export class OrderItemDiscountAction implements PromotionActionInterface {
@@ -44,10 +45,32 @@ export class OrderItemDiscountAction implements PromotionActionInterface {
         });
       }
     } else if (this.configuration.percentage) {
-      subject.addAdjustment({
-        reference,
-        amount: -(subject.total * this.configuration.percentage),
-      });
+      if (this.configuration.everyNthItem) {
+        const applicableQuantity = biggestDivisible(
+          this.configuration.everyNthItem,
+          subject.quantity,
+        );
+
+        subject.addAdjustment({
+          reference,
+          amount: -(subject.price * applicableQuantity * this.configuration.percentage),
+        });
+      } else {
+        subject.addAdjustment({
+          reference,
+          amount: -(subject.total * this.configuration.percentage),
+        });
+      }
     }
   };
 }
+
+const biggestDivisible = (n: number, b: number) => {
+  let max = 0;
+  for (let j = n; j <= b; j++) {
+    if (j % n == 0 && j > max) {
+      max = j;
+    }
+  }
+  return max;
+};

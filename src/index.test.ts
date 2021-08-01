@@ -3,6 +3,7 @@ import { Promotion } from './models/promotion';
 import { OrderItemDiscountAction } from './models/promotion/action/orderItemDiscountAction';
 import { OrderItemQuantityRule } from './models/promotion/rule/orderItemQuatityRule';
 import { OrderItemSkuRule } from './models/promotion/rule/orderItemSkuRule';
+import { getProductBySku } from './repositories/productRepository';
 
 describe('checkout', () => {
   let co: Checkout;
@@ -17,6 +18,7 @@ describe('checkout', () => {
       actions: [
         new OrderItemDiscountAction({
           percentage: 1 / 3,
+          everyNthItem: 3,
         }),
       ],
     });
@@ -57,5 +59,17 @@ describe('checkout', () => {
     co.scan('ipd');
     co.scan('ipd');
     expect(co.total()).toEqual(271895);
+  });
+
+  it('should handle 3 for 2 promotion with 5 items', () => {
+    co.scan('atv');
+    co.scan('atv');
+    co.scan('atv');
+    co.scan('atv');
+    co.scan('atv');
+
+    const atvPrice = getProductBySku('atv')?.price || 0;
+    // should charge 4 items
+    expect(co.total()).toEqual(atvPrice * 4);
   });
 });
