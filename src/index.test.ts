@@ -16,6 +16,7 @@ describe('checkout', () => {
         new OrderItemQuantityRule({ quantity: 3, operator: 'gte' }),
       ],
       actions: [
+        // apply 1/3 discount for every 3 items
         new OrderItemDiscountAction({
           percentage: 1 / 3,
           everyNthItem: 3,
@@ -30,6 +31,7 @@ describe('checkout', () => {
         new OrderItemQuantityRule({ quantity: 4, operator: 'gte' }),
       ],
       actions: [
+        // discount $50.00 per item
         new OrderItemDiscountAction({
           amount: 5000,
           perItem: true,
