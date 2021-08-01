@@ -1,11 +1,10 @@
 export interface AdjustmentInterface {
-  type: string;
+  reference: string;
   amount: number;
-  adjustableEntity: AdjustableInterface;
 }
 
 export interface AdjustableInterface {
-  getAdjustments: (type: string) => Record<string, AdjustableInterface>;
+  getAdjustment: (reference: string) => AdjustmentInterface | undefined;
   addAdjustment: (adjustment: AdjustmentInterface) => void;
-  removeAdjustment: (adjustment: AdjustmentInterface) => void;
+  removeAdjustment: (reference: string) => void;
 }

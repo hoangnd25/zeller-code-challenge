@@ -1,15 +1,19 @@
 export interface PromotionInterface {
-  rules: Record<string, PromotionRuleInterface>;
-  actions: Record<string, PromotionActionInterface>;
+  id: string;
+  rules: PromotionRuleInterface[];
+  actions: PromotionActionInterface[];
 }
 
 export type PromotionRuleInterface = PromotionElementInterface & {
   isApplicable: (subject: unknown) => boolean;
 };
-export type PromotionActionInterface = PromotionElementInterface;
+
+export type PromotionActionInterface = PromotionElementInterface & {
+  apply: (subject: unknown) => void;
+};
 
 export interface PromotionElementInterface {
-  type?: string;
+  type: string;
   configuration: Record<string, unknown>;
   promotion?: PromotionInterface;
 }

@@ -36,14 +36,16 @@ export class Checkout {
       existingItem.quantity++;
     }
 
-    const applicablePromotion = this.promotions.filter(promotion =>
+    const applicablePromotions = this.promotions.filter(promotion =>
       Object.values(promotion.rules).every(rule => rule.isApplicable(existingItem as OrderItem)),
     );
 
-    console.error(applicablePromotion);
+    applicablePromotions.forEach(promotion => {
+      promotion.actions.forEach(action => action.apply(existingItem));
+    });
   };
 
-  debug = (): void => {
-    console.log(this.order.items); // eslint-disable-line no-console
+  total = (): number => {
+    return this.order.total;
   };
 }

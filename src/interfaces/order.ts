@@ -7,4 +7,6 @@ export interface OrderItemInterface {
   sku: string;
   price: number;
   quantity: number;
+  readonly total: number;
+  readonly adjustedTotal: number;
 }

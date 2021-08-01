@@ -17,16 +17,23 @@ export class Order implements OrderInterface {
   addItem = (item: OrderItemInterface): void => {
     this.items.push(item);
   };
+
+  get total(): number {
+    return this.items.reduce((carry, item) => {
+      return carry + item.adjustedTotal;
+    }, 0);
+  }
 }
 
-interface OrderItemConstructorArgs extends Required<OrderItemInterface> {
+interface OrderItemConstructorArgs
+  extends Required<Omit<OrderItemInterface, 'total' | 'adjustedTotal'>> {
   product: ProductInterface;
 }
 
 export class OrderItem
   implements OrderItemInterface, AdjustableInterface, PromotionSubjectInterface
 {
-  adjustments: Record<string, AdjustmentInterface[]>;
+  adjustments: Record<string, AdjustmentInterface>;
   price: number;
   sku: string;
   quantity: number;
@@ -39,15 +46,26 @@ export class OrderItem
     this.quantity = initialValues.quantity;
   }
 
-  getAdjustments = (_: string) => {
-    return {};
+  get total(): number {
+    return this.price * this.quantity;
+  }
+
+  get adjustedTotal(): number {
+    const adjustedAmount = Object.values(this.adjustments).reduce((carry, adjustment) => {
+      return carry + adjustment.amount;
+    }, 0);
+    return this.total + adjustedAmount;
+  }
+
+  getAdjustment = (reference: string): AdjustmentInterface | undefined => {
+    return this.adjustments[reference] || undefined;
   };
 
   addAdjustment = (adjustment: AdjustmentInterface): void => {
-    console.log(adjustment); // eslint-disable-line
+    this.adjustments[adjustment.reference] = adjustment;
   };
 
-  removeAdjustment = (adjustment: AdjustmentInterface): void => {
-    console.log(adjustment); // eslint-disable-line
+  removeAdjustment = (reference: string): void => {
+    delete this.adjustments[reference];
   };
 }

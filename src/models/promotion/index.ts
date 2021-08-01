@@ -4,12 +4,29 @@ import {
   PromotionInterface,
 } from '../../interfaces/promotion';
 
+interface ConstructorArgs {
+  id: string;
+  rules?: PromotionRuleInterface[];
+  actions?: PromotionActionInterface[];
+}
 export class Promotion implements PromotionInterface {
-  rules: Record<string, PromotionRuleInterface>;
-  actions: Record<string, PromotionActionInterface>;
+  id: string;
+  rules: PromotionRuleInterface[];
+  actions: PromotionActionInterface[];
 
-  constructor() {
-    this.rules = {};
-    this.actions = {};
+  constructor(args: ConstructorArgs) {
+    this.id = args.id;
+
+    this.rules =
+      args.rules?.map(rule => {
+        rule.promotion = this;
+        return rule;
+      }) || [];
+
+    this.actions =
+      args.actions?.map(rule => {
+        rule.promotion = this;
+        return rule;
+      }) || [];
   }
 }
