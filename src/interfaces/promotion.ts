@@ -4,7 +4,7 @@ export interface PromotionInterface {
 }
 
 export type PromotionRuleInterface = PromotionElementInterface & {
-  isApplicable: (subject: Record<string, unknown>) => boolean;
+  isApplicable: (subject: unknown) => boolean;
 };
 export type PromotionActionInterface = PromotionElementInterface;
 

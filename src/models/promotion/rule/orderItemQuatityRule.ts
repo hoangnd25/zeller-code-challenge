@@ -1,4 +1,5 @@
 import { PromotionInterface, PromotionRuleInterface } from '../../../interfaces/promotion';
+import { OrderItem } from '../../order';
 
 interface Config extends Record<string, unknown> {
   quantity?: number;
@@ -21,8 +22,8 @@ export class OrderItemQuantityRule implements PromotionRuleInterface {
     };
   }
 
-  isApplicable = (subject: Record<string, unknown>): boolean => {
-    const subjectQuantity = typeof subject === 'object' ? subject?.quantity : null;
+  isApplicable = (subject: unknown): boolean => {
+    const subjectQuantity = subject instanceof OrderItem ? subject?.quantity : null;
     if (typeof subjectQuantity !== 'number') {
       return false;
     }
