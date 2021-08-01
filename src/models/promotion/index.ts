@@ -1,8 +1,12 @@
-import { PromotionElementInterface, PromotionInterface } from '../../interfaces/promotion';
+import {
+  PromotionRuleInterface,
+  PromotionActionInterface,
+  PromotionInterface,
+} from '../../interfaces/promotion';
 
 export class Promotion implements PromotionInterface {
-  rules: Record<string, PromotionElementInterface>;
-  actions: Record<string, PromotionElementInterface>;
+  rules: Record<string, PromotionRuleInterface>;
+  actions: Record<string, PromotionActionInterface>;
 
   constructor() {
     this.rules = {};
